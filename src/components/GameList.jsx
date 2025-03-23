@@ -1,27 +1,53 @@
-import useGames from "../hooks/useGames";
+import { useEffect, useState } from "react";
+import apiClient from "../services/api-client";
 import GameCard from "./GameCard";
-import GameCardSkeleton from "./GameCardSkeleton";
+import Spinner from "./spinner";
 
-const GameList = ({ selectGenre, selectPlatform, selectSortOrder, searchText }) => {
-    const { data, error, isLoading } = useGames(selectGenre, selectPlatform, selectSortOrder, searchText);
-    const skeletons = [1, 2, 3, 4, 5, 6];
+const GameList = ({ selectPlatform, selectGenre, selectSortOrder, searchText }) => {
+    const [games, setGames] = useState([]);
+    const [error, setError] = useState("");
+    const [isLoading, setLoading] = useState(false);
 
-    if (error)
-        return (
-            <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                <span className="font-medium">Danger alert!</span> {error}
-            </div>
-        );
+    useEffect(() => {
+        const controller = new AbortController();
+        setLoading(true);
+        apiClient
+            .get("/games", {
+                params: {
+                    genres: selectGenre?.id,
+                    parent_platforms: selectPlatform?.id,
+                    ordering: selectSortOrder,
+                    search: searchText,
+                },
+                signal: controller.signal,
+            })
+            .then((res) => {
+                setGames(res.data.results);
+                setLoading(false);
+            })
+            .catch((err) => {
+                if (err.name === "CanceledError") return;
+                setError(err.message);
+                setLoading(false);
+            });
+
+        return () => controller.abort();
+    }, [selectPlatform?.id, selectGenre?.id, selectSortOrder, searchText]);
+
+    if (error) return <p className="text-red-500 text-center p-4">{error}</p>;
+
+    if (isLoading) return <Spinner />;
 
     return (
-        <>
-            <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {isLoading && skeletons.map((skeleton) => <GameCardSkeleton key={skeleton} />)}
-                {data.map((game) => (
+        <div className="flex flex-wrap justify-center gap-6">
+            {games.length === 0 ? (
+                <p className="text-gray-400 text-center w-full p-4">No games found</p>
+            ) : (
+                games.map((game) => (
                     <GameCard key={game.id} game={game} />
-                ))}
-            </div>
-        </>
+                ))
+            )}
+        </div>
     );
 };
 

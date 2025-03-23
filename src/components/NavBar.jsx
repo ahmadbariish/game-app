@@ -1,32 +1,49 @@
 import Logo from "./Logo";
 import LogoImag from "../assets/images/logo.webp";
 import SearchInput from "./SearchInput";
+import { BsSun, BsMoonStars } from "react-icons/bs";
+import CartButton from "./CartButton";
 
-const NavBar = ({ toggleTheme, theme, onSearch }) => {
+const NavBar = ({ toggleTheme, theme, onSearch, toggleSidebar }) => {
     return (
-        <>
-            <div className="navbar-app py-2 border-b border-b-gray-400 mb-3 grid grid-cols-12 items-center">
-                {/* Logo Section */}
+        <nav className="bg-[#2d3748] shadow-lg sticky top-0 z-50">
+            <div className="container mx-auto px-4">
+                <div className="flex items-center h-16">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={toggleSidebar}
+                            className="lg:hidden -ml-1 p-2 rounded-md hover:bg-gray-700 transition-colors"
+                            aria-label="Toggle menu"
+                        >
+                            <svg className="w-6 h-6 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        
+                        <div className="flex-shrink-0">
+                            <Logo image={LogoImag} text="Game App" className="h-8 w-auto" />
+                        </div>
+                    </div>
 
-                <div className="cover-logo col-span-1">
-                    <Logo image={LogoImag} text="gamp app header" className="logo-heder" />
-                </div>
+                    <div className="flex-1 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
+                        <div className="w-full">
+                            <SearchInput onSearch={onSearch} />
+                        </div>
+                    </div>
 
-                {/* Search Section */}
-                <div className="cover-search col-span-10">
-                    <SearchInput onSearch={onSearch} />
-                </div>
-
-                {/* Theme Toggle Section */}
-                <div className="theme-mode col-span-1 flex justify-end">
-                    <label className="inline-flex items-center me-5 cursor-pointer">
-                        <input type="checkbox" value="" className="sr-only peer" onChange={toggleTheme} checked={theme === "dark"} />
-                        <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"></div>
-                        <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{theme === "light" ? "light" : "Dark"}</span>
-                    </label>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={toggleTheme}
+                            className="p-2 text-gray-200 hover:text-white transition-colors"
+                            aria-label="Toggle theme"
+                        >
+                            {theme === 'dark' ? <BsSun className="w-5 h-5" /> : <BsMoonStars className="w-5 h-5" />}
+                        </button>
+                        <CartButton />
+                    </div>
                 </div>
             </div>
-        </>
+        </nav>
     );
 };
 
