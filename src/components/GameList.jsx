@@ -39,12 +39,14 @@ const GameList = ({ selectPlatform, selectGenre, selectSortOrder, searchText }) 
     if (isLoading) return <Spinner />;
 
     return (
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex flex-col space-y-4 px-4">
             {games.length === 0 ? (
-                <p className="text-gray-400 text-center w-full p-4">No games found</p>
+                <p className="text-gray-400 text-center p-4">No games found</p>
             ) : (
                 games.map((game) => (
-                    <GameCard key={game.id} game={game} />
+                    <div key={game.id} className="w-full max-w-2xl mx-auto">
+                        <GameCard game={game} />
+                    </div>
                 ))
             )}
         </div>

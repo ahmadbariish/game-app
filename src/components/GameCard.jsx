@@ -20,45 +20,46 @@ const GameCard = ({ game }) => {
     };
 
     return (
-        <Link to={`/games/${game.slug}`} className="w-full md:w-[400px] lg:w-[500px] block">
-            <div className="relative group h-full bg-[#2d3748] rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl">
-                <div className="relative w-full pt-[56.25%]">
-                    <img
-                        src={getCroppedImageUrl(game.background_image)}
-                        alt={game.name}
-                        className="absolute top-0 left-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#2d3748] to-transparent h-16"></div>
-                    
-                    <button
-                        onClick={handleCartClick}
-                        className="absolute top-4 right-4 p-2 rounded-full bg-gray-900/80 text-white hover:bg-gray-800 transition-colors"
-                    >
-                        {inCart ? <FaHeart className="w-5 h-5 text-red-500" /> : <FaRegHeart className="w-5 h-5" />}
-                    </button>
-                </div>
-                
-                <div className="p-4">
-                    <div className="flex justify-between items-start gap-4 mb-2">
-                        <h2 className="text-lg font-semibold text-gray-100 line-clamp-1 flex-1">
+        <div className="relative">
+            <Link to={"/games/" + game.slug}>
+                <div className="bg-[#202020] rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+                    <div className="relative aspect-[16/9]">
+                        <img
+                            src={getCroppedImageUrl(game.background_image)}
+                            alt={game.name}
+                            className="absolute top-0 left-0 w-full h-full object-cover"
+                        />
+                    </div>
+                    <div className="p-4">
+                        <div className="flex justify-between items-start mb-2">
+                            <PlatformIconList
+                                platforms={game.parent_platforms?.map((p) => p.platform)}
+                            />
+                            <CriticScore score={game.metacritic} />
+                        </div>
+                        <h2 className="text-xl font-bold text-white mb-2">
                             {game.name}
                         </h2>
-                        {game.metacritic && <CriticScore score={game.metacritic} />}
-                    </div>
-
-                    <div className="flex items-center gap-2 mb-3">
-                        <PlatformIconList platforms={game.parent_platforms?.map(p => p.platform)} />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <Emoji rating={game.rating_top} />
-                        <span className="text-sm text-gray-400">
-                            {game.released && new Date(game.released).getFullYear()}
-                        </span>
+                        <div className="flex items-center justify-between">
+                            <Emoji rating={game.rating_top} />
+                            <span className="text-sm text-gray-400">
+                                {game.released && new Date(game.released).getFullYear()}
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </Link>
+            </Link>
+            <button
+                onClick={handleCartClick}
+                className="absolute top-2 right-2 p-2 rounded-full bg-gray-900/80 text-white hover:bg-gray-800 transition-colors z-10"
+            >
+                {inCart ? (
+                    <FaHeart className="w-5 h-5 text-red-500" />
+                ) : (
+                    <FaRegHeart className="w-5 h-5" />
+                )}
+            </button>
+        </div>
     );
 };
 

@@ -6,7 +6,7 @@ import { GameHeading } from "./GameHeading";
 const MainContent = ({ selectGenre, onSelectPlatform, selectPlatform, selectSortOrder, onSelectSortOrder, searchText }) => {
     return (
         <div className="p-4">
-            <div className="mb-8">
+            <div className="">
                 <GameHeading selectGenre={selectGenre} selectPlatform={selectPlatform} />
             </div>
             
